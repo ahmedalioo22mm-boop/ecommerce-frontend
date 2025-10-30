@@ -1,11 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Sidebar from "./_components/Sidebar";
 import { Menu } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    let user = null;
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        user = JSON.parse(storedUser);
+      }
+    } catch (e) {
+      console.error("Failed to parse user from localStorage", e);
+    }
+
+    if (!user || user.role !== 'admin') {
+      router.push('/login');
+    }
+  }, [router]);
 
   return (
     <div className="flex h-screen bg-gray-100 w-full">
