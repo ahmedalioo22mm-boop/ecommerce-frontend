@@ -86,9 +86,6 @@ export const AuthProvider = ({ children }) => {
           error
         );
       }
-      // لا يهم إذا فشل الطلب من الخادم، الأهم هو تنظيف الحالة من طرف العميل
-      // يمكن تسجيل الخطأ للمراجعة لاحقاً
-      console.error("Server logout request failed, but clearing client state.", error);
     } finally {
       // قم بإزالة البيانات من الحالة و localStorage
       setUser(null);
