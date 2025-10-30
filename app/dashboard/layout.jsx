@@ -5,8 +5,16 @@ import { useRouter } from 'next/navigation';
 import Sidebar from "./_components/Sidebar";
 import { Menu } from 'lucide-react';
 
+// A simple loading component
+const LoadingScreen = () => (
+  <div className="flex items-center justify-center h-screen w-full">
+    <p>Loading...</p> {/* You can replace this with a spinner */}
+  </div>
+);
+
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isVerified, setIsVerified] = useState(false); // <-- New state
   const router = useRouter();
 
   useEffect(() => {
@@ -20,10 +28,17 @@ export default function DashboardLayout({ children }) {
       console.error("Failed to parse user from localStorage", e);
     }
 
-    if (!user || user.role !== 'admin') {
+    if (user && user.role === 'admin') {
+      setIsVerified(true); // <-- Set verified to true
+    } else {
       router.push('/login');
     }
   }, [router]);
+
+  // Render loading screen until verification is complete
+  if (!isVerified) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100 w-full">
